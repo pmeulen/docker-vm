@@ -1,0 +1,46 @@
+---
+
+- name: Provision Vagrant VM
+  hosts: all
+  sudo: True
+  gather_facts: False
+
+  vars:
+
+  tasks:
+      # Cache packages in vagant dir
+      - name: Create dir for storing apt cache in /vagrant
+        file: state=directory path=/vagrant/apt/cache/partial
+
+      - name: Set apt cache location
+        copy: content='dir::cache::archives "/vagrant/apt/cache";' dest=/etc/apt/apt.conf.d/cache
+
+      # The VM image has a custom kernel with hgfs for use with VMWare
+      # A kernel update would break hgfs support so we disable it.
+      # To get a new kernel, get an updated box
+      - name: Disable apt kernel update
+        command: apt-mark hold "linux-image-*"
+
+      - name: Disable apt kernel headers update
+        command: apt-mark hold "linux-headers-*"
+
+      - name: Enable https in apt
+        apt: name={{item}} update_cache=yes
+        with_items:
+          - apt-transport-https
+          - ca-certificates
+
+      - name: Add docker apt key by id from keyserver
+        apt_key: keyserver=p80.pool.sks-keyservers.net id=58118E89F3A912897C070ADBF76221572C52609D
+
+      - name: Add docker repo to apt
+        apt_repository: repo="deb https://apt.dockerproject.org/repo debian-jessie main" state=present filename="locker"
+
+      - name: apt-get update, dist-upgrade
+        apt: update_cache=yes upgrade=dist
+
+      - name: Install docker engine
+        apt: name=docker-engine
+
+      - name: Start docker service on boot, and ensure that it is running
+        service: name=docker enabled=yes state=started
