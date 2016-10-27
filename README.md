@@ -34,6 +34,6 @@ That should print "Hello world"
 
 - Should work with the virtualbox provider as well instead of vmware fusion, bus is untested
 - The VM is registerd with docker-machine as "default". To get rid of a previous version run "docker-machine rm default"
-- The VM uses a fixed ip 192.186.66.200/24. Vagrant should take care of creating a provate vmware network shared with the host. 
+- The VM uses a fixed ip 192.168.66.200/24. Vagrant should take care of creating a provate vmware network shared with the host. 
 - Versions used: Vagrant 1.8.5 with vagrant-vmware-fusion provider 4.0.11, VMWare Fusion 8.5.0, ansible 2.1.1.0 (pip), docker-machine version 0.8.1 (macports), docker client version 1.12.1 (macports)
 - Add the "eval $(docker-machine env)" to ~/.bash_profile to make the docker command available in any shell
