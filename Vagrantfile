@@ -10,16 +10,14 @@ Vagrant.configure("2") do |config|
     docker.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"] = "2048"
       v.vmx["numvcpus"] = "2"
-      # puppetlabs centos box uses ens33 nic
-      #v.vmx["ethernet0.pciSlotNumber"] = "33"
-      # Add second nic for vmnet2 (configure this manually in vmware as host based, 192.168.66.0/24)
-      #v.vmx["ethernet1.present"] = "TRUE"
-      #v.vmx["ethernet1.connectionType"] = "custom"
-      #v.vmx["ethernet1.virtualDev"] = "e1000"
-      #v.vmx["ethernet1.wakeOnPcktRcv"] = "FALSE"
-      #v.vmx["ethernet1.addressType"] = "generated"
-      #v.vmx["ethernet1.vnet"] = "vmnet2"
-      #v.vmx["ethernet1.pciSlotNumber"] = "32"
+    end
+    docker.vm.provider "" do |v|
+      v.vmx["memsize"] = "2048"
+      v.vmx["numvcpus"] = "2"
+    end
+    docker.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
     end
   end
 
